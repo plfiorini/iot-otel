@@ -1,0 +1,51 @@
+{
+	"name": "api-backend",
+	"version": "1.0.0",
+	"description": "A sample Node.js application",
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"main": "src/index.ts",
+	"scripts": {
+		"types": "tsc --noEmit",
+		"dev": "tsx --env-file=.env --watch src/index.ts",
+		"check": "biome check",
+		"check:fix": "biome check --write",
+		"lint": "biome lint",
+		"lint:write": "biome lint --write",
+		"format": "biome format",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "Pier Luigi Fiorini",
+	"license": "MIT",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^5.0.1",
+		"@types/node": "^22.14.1",
+		"@types/pino": "^7.0.4",
+		"tsx": "^4.19.3",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"@opentelemetry/api": "^1.9.0",
+		"@opentelemetry/auto-instrumentations-node": "^0.58.0",
+		"@opentelemetry/exporter-metrics-otlp-http": "^0.200.0",
+		"@opentelemetry/exporter-trace-otlp-http": "^0.200.0",
+		"@opentelemetry/resources": "^2.0.0",
+		"@opentelemetry/sdk-metrics": "^2.0.0",
+		"@opentelemetry/sdk-node": "^0.200.0",
+		"@opentelemetry/sdk-trace-node": "^2.0.0",
+		"@opentelemetry/semantic-conventions": "^1.32.0",
+		"@types/sequelize": "^4.28.20",
+		"body-parser": "^2.2.0",
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"pino": "^9.6.0",
+		"pino-http": "^10.4.0",
+		"pino-pretty": "^13.0.0",
+		"sequelize": "^6.37.7",
+		"sqlite3": "^5.1.7"
+	}
+}

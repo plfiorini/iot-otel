@@ -1,0 +1,44 @@
+server:
+  http_listen_port: 3200
+  grpc_listen_port: 9095
+
+compactor:
+  compaction:
+    block_retention: 48h
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/lib/tempo/traces
+
+metrics_generator:
+  registry:
+    external_labels:
+      source: tempo
+  storage:
+    path: /var/lib/tempo/generator/wal
+    remote_write:
+      - url: http://prometheus:9090/api/v1/write
+        send_exemplars: true
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics]
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
