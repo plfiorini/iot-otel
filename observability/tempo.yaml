@@ -18,6 +18,8 @@ storage:
     backend: local
     local:
       path: /var/lib/tempo/traces
+    wal:
+      path: /var/lib/tempo/wal
 
 metrics_generator:
   registry:
@@ -32,7 +34,7 @@ metrics_generator:
 overrides:
   defaults:
     metrics_generator:
-      processors: [service-graphs, span-metrics]
+      processors: [service-graphs, span-metrics, local-blocks]
 
 distributor:
   receivers:
