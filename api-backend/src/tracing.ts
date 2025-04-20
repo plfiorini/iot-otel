@@ -28,7 +28,14 @@ const sdk = new NodeSDK({
 		endpoint: "/metrics",
 		preventServerStart: false,
 	}),
-	instrumentations: [getNodeAutoInstrumentations()],
+	instrumentations: [
+		getNodeAutoInstrumentations({
+			// Enable pino instrumentation when LOKI_HOST is not defined
+			"@opentelemetry/instrumentation-pino": {
+				enabled: !process.env.LOKI_HOST,
+			},
+		}),
+	],
 });
 
 // Initialize the SDK and register with the OpenTelemetry API
