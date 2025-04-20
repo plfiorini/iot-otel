@@ -14,19 +14,19 @@ services:
     networks:
       - observability
 
-  blackbox-exporter:
-    image: prom/blackbox-exporter:latest
-    container_name: blackbox-exporter
-    ports:
-      - "9115:9115"
-    volumes:
-      - ./blackbox-exporter.yaml:/etc/blackbox_exporter/config.yaml:z
-    command:
-      - "--config.file=/etc/blackbox_exporter/config.yaml"
-    depends_on:
-      - prometheus
-    networks:
-      - observability
+  # blackbox-exporter:
+  #   image: prom/blackbox-exporter:latest
+  #   container_name: blackbox-exporter
+  #   ports:
+  #     - "9115:9115"
+  #   volumes:
+  #     - ./blackbox-exporter.yaml:/etc/blackbox_exporter/config.yaml:z
+  #   command:
+  #     - "--config.file=/etc/blackbox_exporter/config.yaml"
+  #   depends_on:
+  #     - prometheus
+  #   networks:
+  #     - observability
 
   loki:
     image: grafana/loki:latest
