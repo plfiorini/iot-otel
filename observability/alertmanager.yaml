@@ -1,0 +1,69 @@
+global:
+  # The smarthost and SMTP sender used for mail notifications
+  smtp_smarthost: 'smtp.example.org:587'
+  smtp_from: 'alertmanager@example.org'
+  smtp_auth_username: 'alertmanager'
+  smtp_auth_password: 'password'
+  # The auth token for Slack
+  slack_api_url: 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX'
+  # The default notification timeout
+  resolve_timeout: 5m
+
+# The root route on which all alerts enter
+route:
+  # The root route must not have matchers as it's the default fallback
+  group_by: ['alertname', 'cluster', 'service']
+  # How long to wait to buffer alerts of the same group before sending notification
+  group_wait: 30s
+  # How long to wait before sending notification about new alerts after the first one
+  group_interval: 5m
+  # How long to wait before sending a notification again if it has already been sent
+  repeat_interval: 4h
+  # The default receiver
+  receiver: 'email-notifications'
+  
+  # Sub-route for critical alerts
+  routes:
+  - receiver: 'slack-notifications'
+    matchers:
+      - severity="critical"
+    # Override the global repeat_interval for critical alerts
+    repeat_interval: 1h
+  
+  # Sub-route for warnings
+  - receiver: 'email-notifications'
+    matchers:
+      - severity="warning"
+
+# Inhibition rules allow to mute alerts when others are already firing
+inhibit_rules:
+  # Mute warning alerts if the same alertname/cluster/service is already critical
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity="warning"
+    # Apply inhibition if the alertname, cluster and service are the same
+    equal: ['alertname', 'cluster', 'service']
+
+# Receivers define notification integrations
+receivers:
+  - name: 'email-notifications'
+    email_configs:
+      - to: 'team@example.org'
+        send_resolved: true
+
+  - name: 'slack-notifications'
+    slack_configs:
+      - channel: '#alerts'
+        send_resolved: true
+        title: '{{ .GroupLabels.alertname }}'
+        text: >-
+          {{ range .Alerts }}
+            *Alert:* {{ .Annotations.summary }}
+            *Description:* {{ .Annotations.description }}
+            *Severity:* {{ .Labels.severity }}
+            *Details:*
+              {{ range .Labels.SortedPairs }}
+                • {{ .Name }}: {{ .Value }}
+              {{ end }}
+          {{ end }}
