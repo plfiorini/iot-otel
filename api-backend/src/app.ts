@@ -2,9 +2,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import pinoHttp from "pino-http";
-import orderRoutes from "./endpoints/order/order.route"; // Import order routes
-import { initDb } from "./db/sequelize"; // Import DB initializer
 import logger from "./core/logger";
+import { initDb } from "./db/sequelize";
+import healthRoutes from "./endpoints/health/health.route";
+import orderRoutes from "./endpoints/order/order.route";
 import { httpMetricsMiddleware } from "./middlewares/httpMetrics";
 
 const httpLogger = pinoHttp({ logger: logger.child({ name: "http" }) });
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use(httpMetricsMiddleware);
 
 // Routes
+app.use(healthRoutes);
 app.use("/orders", orderRoutes);
 
 // Function to start the server
