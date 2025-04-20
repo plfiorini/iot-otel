@@ -1,10 +1,9 @@
-// filepath: /workspaces/iot-otel/api-backend/src/endpoints/product/product.controller.ts
 import type { Request, Response } from "express";
 import ProductService from "./product.service";
 import { trace, SpanStatusCode } from "@opentelemetry/api";
 
 // Create a tracer for this module
-const tracer = trace.getTracer("product-controller");
+const tracer = trace.getTracer("endpoints.product");
 
 class ProductController {
 	/**
@@ -31,6 +30,7 @@ class ProductController {
 
 					const newProduct = await ProductService.createProduct(productData);
 					span.setAttribute("product.id", newProduct.id || "unknown");
+					span.setStatus({ code: SpanStatusCode.OK });
 					res.status(201).json(newProduct);
 				} catch (error) {
 					console.error("Error in ProductController.createProduct:", error);
@@ -102,11 +102,9 @@ class ProductController {
 						message: error instanceof Error ? error.message : "Unknown error",
 					});
 					span.recordException(error as Error);
-					res
-						.status(500)
-						.json({
-							message: "Internal server error while retrieving product",
-						});
+					res.status(500).json({
+						message: "Internal server error while retrieving product",
+					});
 				} finally {
 					span.end();
 				}
@@ -132,11 +130,9 @@ class ProductController {
 						message: error instanceof Error ? error.message : "Unknown error",
 					});
 					span.recordException(error as Error);
-					res
-						.status(500)
-						.json({
-							message: "Internal server error while retrieving products",
-						});
+					res.status(500).json({
+						message: "Internal server error while retrieving products",
+					});
 				} finally {
 					span.end();
 				}

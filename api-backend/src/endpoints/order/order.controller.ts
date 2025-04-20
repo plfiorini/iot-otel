@@ -3,7 +3,7 @@ import OrderService from "./order.service";
 import { trace, SpanStatusCode } from "@opentelemetry/api";
 
 // Create a tracer for this module
-const tracer = trace.getTracer("order-controller");
+const tracer = trace.getTracer("controllers.order");
 
 class OrderController {
 	/**

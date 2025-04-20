@@ -1,4 +1,3 @@
-// filepath: /workspaces/iot-otel/api-backend/src/endpoints/product/product.route.ts
 import { Router } from "express";
 import ProductController from "./product.controller";
 
