@@ -5,6 +5,7 @@ import pinoHttp from "pino-http";
 import orderRoutes from "./endpoints/order/order.route"; // Import order routes
 import { initDb } from "./db/sequelize"; // Import DB initializer
 import logger from "./core/logger";
+import { httpMetricsMiddleware } from "./middlewares/httpMetrics";
 
 const httpLogger = pinoHttp({ logger: logger.child({ name: "http" }) });
 const app = express();
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 app.use(httpLogger);
 app.use(cors());
 app.use(bodyParser.json());
+app.use(httpMetricsMiddleware);
 
 // Routes
 app.use("/orders", orderRoutes);

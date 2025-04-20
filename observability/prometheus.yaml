@@ -14,3 +14,8 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets: ['grafana:3000']
+
+  - job_name: 'api-backend'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['api-backend:9464']

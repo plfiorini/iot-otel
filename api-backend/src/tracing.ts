@@ -23,7 +23,11 @@ const sdk = new NodeSDK({
 		[ATTR_SERVICE_VERSION]: pkg.version,
 	}),
 	traceExporter: new OTLPTraceExporter(),
-	metricReader: new PrometheusExporter(),
+	metricReader: new PrometheusExporter({
+		port: 9464,
+		endpoint: "/metrics",
+		preventServerStart: false,
+	}),
 	instrumentations: [getNodeAutoInstrumentations()],
 });
 
