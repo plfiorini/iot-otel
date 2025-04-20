@@ -106,7 +106,8 @@ services:
     container_name: api-backend
     command: ["node", "dist/index.js"]
     ports:
-      - "8000:8000"
+      - "8000:8000"  # API backend HTTP endpoint
+      - "9464:9464"  # Prometheus metrics endpoint
     environment:
       - PORT=8000
       - LOG_LEVEL=trace
