@@ -6,6 +6,7 @@ import logger from "./core/logger";
 import { initDb } from "./db/sequelize";
 import healthRoutes from "./endpoints/health/health.route";
 import orderRoutes from "./endpoints/order/order.route";
+import productRoutes from "./endpoints/product/product.route";
 import { httpMetricsMiddleware } from "./middlewares/httpMetrics";
 
 const httpLogger = pinoHttp({ logger: logger.child({ name: "http" }) });
@@ -21,6 +22,7 @@ app.use(httpMetricsMiddleware);
 // Routes
 app.use(healthRoutes);
 app.use("/orders", orderRoutes);
+app.use("/products", productRoutes);
 
 // Function to start the server
 const startServer = async () => {
