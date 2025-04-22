@@ -38,6 +38,7 @@
 		"@opentelemetry/sdk-node": "^0.200.0",
 		"@opentelemetry/sdk-trace-node": "^2.0.0",
 		"@opentelemetry/semantic-conventions": "^1.32.0",
+		"@pyroscope/nodejs": "^0.4.5",
 		"@types/sequelize": "^4.28.20",
 		"body-parser": "^2.2.0",
 		"cors": "^2.8.5",

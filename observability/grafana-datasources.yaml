@@ -8,6 +8,8 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: true
+    jsonData:
+      manageAlerts: true
 
   - name: Loki
     uid: loki
@@ -46,11 +48,21 @@ datasources:
         enabled: true
       traceQuery:
         timeShiftEnabled: true
-        spanStartTimeShift: -1h
-        spanEndTimeShift: -1h
+        spanStartTimeShift: '-1h'
+        spanEndTimeShift: '-1h'
       spanBar:
         type: Tag
         tag: 'http.path'
       streamingEnabled:
         search: true
         metrics: true
+
+  - name: Pyroscope
+    uid: pyroscope
+    type: grafana-pyroscope-datasource
+    access: proxy
+    url: http://pyroscope:4040
+    isDefault: false
+    editable: true
+    jsonData:
+      minStep: '15s'

@@ -105,7 +105,7 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
       - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor metricsSummary
-      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app;grafana-clock-panel,grafana-piechart-panel
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app;grafana-pyroscope-app;grafana-clock-panel,grafana-piechart-panel
       #- GF_SECURITY_ADMIN_USER=admin
       #- GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -117,6 +117,19 @@ services:
       - prometheus
       - loki
       - tempo
+    networks:
+      - observability
+
+  pyroscope:
+    image: pyroscope/pyroscope:latest
+    container_name: pyroscope
+    command:
+      - server
+      - --api-bind-addr=0.0.0.0:4040
+    ports:
+      - "4040:4040"
+    volumes:
+      - pyroscope-data:/var/lib/pyroscope
     networks:
       - observability
 
@@ -146,6 +159,7 @@ services:
       - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=grpc
+      - PYROSCOPE_SERVER_ADDRESS=http://pyroscope:4040
     depends_on:
       #- tempo
       - alloy
@@ -158,6 +172,7 @@ volumes:
   alloy-data:
   loki-data:
   grafana-data:
+  pyroscope-data:
 
 networks:
   observability:
