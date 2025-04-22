@@ -1,0 +1,27 @@
+#!/bin/bash
+
+count=${1:-1000}
+
+for i in $(seq 1 $count); do
+
+num=$(date +"%Y%m%d%H%M%S%N")
+
+curl -X POST http://localhost:8000/products \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"IoT Motion Sensor ${num}\",
+    \"description\": \"Wireless motion detection sensor\",
+    \"price\": 49.95,
+    \"stock\": 50
+  }"
+
+curl -X POST http://localhost:8000/orders \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"orderId\": \"${num}\",
+    \"productId\": 1,
+    \"quantity\": 5,
+    \"status\": \"pending\"
+  }"
+
+done
