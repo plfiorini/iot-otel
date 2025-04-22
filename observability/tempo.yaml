@@ -2,6 +2,8 @@ server:
   http_listen_port: 3200
   grpc_listen_port: 9095
 
+stream_over_http_enabled: true
+
 compactor:
   compaction:
     block_retention: 48h
@@ -30,11 +32,17 @@ metrics_generator:
     remote_write:
       - url: http://prometheus:9090/api/v1/write
         send_exemplars: true
+  processor:
+    local_blocks:
+      filter_server_spans: false
 
 overrides:
   defaults:
     metrics_generator:
-      processors: [service-graphs, span-metrics, local-blocks]
+      processors:
+        - service-graphs
+        - span-metrics
+        - local-blocks
 
 distributor:
   receivers:

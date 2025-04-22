@@ -19,10 +19,10 @@ datasources:
     jsonData:
       maxLines: 1000
       derivedFields:
-        - datasourceUid: tempo
-          name: TraceID
-          type: label
-          label: traceid
+        - name: TraceID
+          datasourceUid: tempo
+          matcherRegex: "trace[_]?id=(\\w+)"
+          url: "${__value.raw}"
           urlDisplayLabel: 'View Trace'
 
   - name: Tempo
@@ -34,8 +34,23 @@ datasources:
     editable: true
     jsonData:
       tracesToLogs:
-        datasourceUid: 'loki'
+        datasourceUid: loki
         filterByTraceID: true
         filterBySpanID: false
-      traceToLogs:
-        datasourceUid: 'prometheus'
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags: [{ key: 'service.name', value: 'service' }, { key: 'job' }]
+      serviceMap:
+        datasourceUid: prometheus
+      nodeGraph:
+        enabled: true
+      traceQuery:
+        timeShiftEnabled: true
+        spanStartTimeShift: -1h
+        spanEndTimeShift: -1h
+      spanBar:
+        type: Tag
+        tag: 'http.path'
+      streamingEnabled:
+        search: true
+        metrics: true

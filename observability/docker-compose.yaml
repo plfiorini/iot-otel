@@ -62,8 +62,8 @@ services:
     ports:
       - "3200:3200"   # Tempo query endpoint
       - "9095:9095"   # Tempo gRPC endpoint
-      - "4317:4317"   # OpenTelemetry gRPC endpoint
-      - "4318:4318"   # OpenTelemetry HTTP endpoint
+      #- "4317:4317"   # OpenTelemetry gRPC endpoint
+      #- "4318:4318"   # OpenTelemetry HTTP endpoint
     volumes:
       - tempo-data:/var/lib/tempo
       - ./tempo.yaml:/etc/tempo/tempo.yaml:z
@@ -78,8 +78,15 @@ services:
   alloy:
     image: grafana/alloy:latest
     container_name: alloy
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy
+      - /etc/alloy/config.alloy
     ports:
       - "12345:12345" # Alloy HTTP endpoint
+      - "4317:4317"   # OpenTelemetry gRPC endpoint
+      - "4318:4318"   # OpenTelemetry HTTP endpoint
     volumes:
       - alloy-data:/var/lib/alloy
       - ./config.alloy:/etc/alloy/config.alloy:z
@@ -127,20 +134,20 @@ services:
       - LOG_LEVEL=trace
       #- LOKI_HOST=http://loki:3100
       - OTEL_DEBUG=1
-      #- OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://tempo:4318/v1/traces
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://tempo:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4317
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://alloy:4317
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://alloy:4317
       - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://alloy:4317
-      #- OTEL_EXPORTER_OTLP_INSECURE=true
+      - OTEL_EXPORTER_OTLP_INSECURE=true
       - OTEL_EXPORTER_OTLP_TRACES_INSECURE=true
       - OTEL_EXPORTER_OTLP_METRICS_INSECURE=true
       - OTEL_EXPORTER_OTLP_LOGS_INSECURE=true
-      #- OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=grpc
     depends_on:
-      - tempo
+      #- tempo
       - alloy
     networks:
       - observability
