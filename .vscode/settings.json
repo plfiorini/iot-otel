@@ -10,5 +10,4 @@
     "editor.codeActionsOnSave": {
         "quickfix.biome": "explicit"
     },
-    "biome.lspBin": "${workspaceFolder}/iot-backend/node_modules/@biomejs/cli-linux-x64/biome",
 }

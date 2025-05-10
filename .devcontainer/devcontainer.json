@@ -2,9 +2,6 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node",
   "customizations": {
     "vscode": {
-      "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
-      },
       "extensions": [
         "GitHub.copilot",
         "GitHub.copilot-chat",
